@@ -10,11 +10,11 @@ export default function Home() {
       {/* Globe area — CesiumJS globe arrives in Phase 2 */}
       <section
         aria-label="Globe"
-        className="relative flex flex-1 items-center justify-center bg-[radial-gradient(circle_at_50%_45%,#0f3b5f_0%,#07121f_60%)]"
+        className="relative flex flex-1 items-start justify-center pt-16 pb-[45dvh] md:items-center md:pt-0 md:pb-0 bg-[radial-gradient(circle_at_50%_45%,#0f3b5f_0%,#07121f_60%)]"
       >
         <div className="flex flex-col items-center gap-4 px-6 text-center text-slate-200">
-          <Globe2 className="size-40 text-primary/70" strokeWidth={0.8} aria-hidden />
-          <h1 className="text-2xl font-bold">Know where the fish are — before you leave the dock.</h1>
+          <Globe2 className="size-24 text-primary/70 md:size-40" strokeWidth={0.8} aria-hidden />
+          <h1 className="text-xl font-bold md:text-2xl">Know where the fish are — before you leave the dock.</h1>
           <p className="max-w-md text-sm text-slate-300">
             The interactive 3D globe is coming in Phase 2. You&apos;ll click anywhere to set your location and see nearby
             spots, what&apos;s running, and live conditions.

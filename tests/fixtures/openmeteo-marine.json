@@ -1,0 +1,2 @@
+{"latitude":41.0,"longitude":-71.875,"hourly_units":{"time":"iso8601","wave_height":"ft","wave_period":"s","wave_direction":"°","swell_wave_height":"ft","swell_wave_period":"s","sea_surface_temperature":"°C"},
+ "hourly":{"time":["2026-11-09T22:00","2026-11-09T23:00"],"wave_height":[4.331,3.94],"wave_period":[6.45,6.3],"wave_direction":[110,112],"swell_wave_height":[2.297,2.1],"swell_wave_period":[8.1,8.0],"sea_surface_temperature":[14.6,null]}}

@@ -1,12 +1,5 @@
-import { ComingSoon } from "@/components/coming-soon";
+import { redirect } from "next/navigation";
 
-type Props = { params: Promise<{ run: string }> };
-
-export default async function Page({ params }: Props) {
-  const p = await params;
-  return (
-    <ComingSoon title={`Saltwater run`} phase={5}>
-      <p>Requested: <code>{JSON.stringify(p)}</code></p>
-    </ComingSoon>
-  );
+export default async function Page({ params }: { params: Promise<{ run: string }> }) {
+  redirect(`/runs/${(await params).run}`);
 }

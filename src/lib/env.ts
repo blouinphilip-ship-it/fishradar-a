@@ -21,6 +21,11 @@ const schema = z.object({
   REDDIT_CLIENT_ID: z.string().optional(),
   REDDIT_CLIENT_SECRET: z.string().optional(),
   NWS_USER_AGENT: z.string().default("FishRadarAI/0.1 (contact: set-me@example.com)"),
+  /** Public demo server: allows the test-angler login even in a production build. Never set on a real deployment. */
+  DEMO_MODE: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((v) => v === "true"),
   ENABLE_DEV_LOGIN: z
     .enum(["true", "false"])
     .default("false")

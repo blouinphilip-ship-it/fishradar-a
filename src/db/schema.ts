@@ -12,7 +12,6 @@ import {
   boolean,
   customType,
   doublePrecision,
-  geometry,
   index,
   integer,
   jsonb,
@@ -27,6 +26,7 @@ import {
   uuid,
   vector,
 } from "drizzle-orm/pg-core";
+import { parseEWKB } from "drizzle-orm/pg-core/columns/postgis_extension/utils";
 
 /** Generic PostGIS geometry for non-point shapes (polygons, lines). Stored/read as GeoJSON text via ST_* helpers. */
 const anyGeometry = customType<{ data: string; driverData: string }>({
@@ -35,7 +35,23 @@ const anyGeometry = customType<{ data: string; driverData: string }>({
   },
 });
 
-const point = (name: string) => geometry(name, { type: "point", mode: "xy", srid: 4326 });
+/**
+ * WGS84 point column: geometry(Point,4326). Written as EWKT with an explicit SRID (drizzle's
+ * built-in geometry() drops the SRID), read back from PostGIS's hex EWKB.
+ */
+const point = customType<{ data: { x: number; y: number }; driverData: string }>({
+  dataType() {
+    return "geometry(Point,4326)";
+  },
+  toDriver(v) {
+    if (!Number.isFinite(v.x) || !Number.isFinite(v.y)) throw new Error("invalid point");
+    return `SRID=4326;POINT(${v.x} ${v.y})`;
+  },
+  fromDriver(hex) {
+    const [x, y] = parseEWKB(hex);
+    return { x, y };
+  },
+});
 
 const createdAt = () => timestamp("created_at", { withTimezone: true }).defaultNow().notNull();
 const updatedAt = () => timestamp("updated_at", { withTimezone: true }).defaultNow().notNull();
@@ -152,11 +168,17 @@ export const spots = pgTable(
     nearestTideStationId: text("nearest_tide_station_id"),
     nearestCurrentStationId: text("nearest_current_station_id"),
     nearestBuoyId: text("nearest_buoy_id"),
+    waterTempStationId: text("water_temp_station_id"),
     usgsSiteId: text("usgs_site_id"),
     nwsMarineZone: text("nws_marine_zone"),
     regulationsUrl: text("regulations_url"),
     /** Max wave height (ft) considered safe for small boats here; used for the safety cap. */
     safeWaveFt: real("safe_wave_ft"),
+    /** Seasonal zone used for species calendars, e.g. "northeast", "keys", "fw-great-lakes". */
+    zone: text("zone").notNull().default("northeast"),
+    /** Can be fished from shore / boat / kayak. */
+    accessModes: text("access_modes").array().default(sql`'{shore,boat}'::text[]`).notNull(),
+    aliases: text("aliases").array().default(sql`'{}'::text[]`).notNull(),
     isDemo: boolean("is_demo").default(false).notNull(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -426,6 +448,7 @@ export const catches = pgTable(
     conditionsSnapshotId: integer("conditions_snapshot_id").references(() => conditionsSnapshots.id),
     notes: text("notes"),
     released: boolean("released").default(true).notNull(),
+    isDemo: boolean("is_demo").default(false).notNull(),
     moderation: reviewStatusEnum("moderation").default("approved").notNull(),
     createdAt: createdAt(),
   },
@@ -564,3 +587,66 @@ export const aiJobs = pgTable("ai_jobs", {
   refId: text("ref_id"),
   createdAt: createdAt(),
 });
+
+/** Which species can be caught at a spot (curated + learned from reports). */
+export const spotSpecies = pgTable(
+  "spot_species",
+  {
+    spotId: integer("spot_id").notNull().references(() => spots.id, { onDelete: "cascade" }),
+    speciesId: integer("species_id").notNull().references(() => species.id, { onDelete: "cascade" }),
+    notes: text("notes"),
+    /** Where/how to target this species at this spot. */
+    howTo: text("how_to"),
+  },
+  (t) => [primaryKey({ columns: [t.spotId, t.speciesId] })],
+);
+
+/** Species-specific tackle advice (rigs, rod/reel/line) — region-agnostic. */
+export const speciesTackle = pgTable("species_tackle", {
+  speciesId: integer("species_id").primaryKey().references(() => species.id, { onDelete: "cascade" }),
+  rod: text("rod"),
+  reel: text("reel"),
+  line: text("line"),
+  leader: text("leader"),
+  hooks: text("hooks"),
+  rigs: jsonb("rigs").$type<{ name: string; description: string }[]>().default([]).notNull(),
+  structure: text("structure"),
+  bestTide: text("best_tide"),
+  bestTime: text("best_time"),
+  depth: text("depth"),
+  /** Default lure/bait slugs for this species when no recent reports exist (seasonal knowledge). */
+  defaultLures: text("default_lures").array().default(sql`'{}'::text[]`).notNull(),
+  defaultBaits: text("default_baits").array().default(sql`'{}'::text[]`).notNull(),
+});
+
+/** Raw partner / user-submitted report text, before extraction. */
+export const rawSubmissions = pgTable("raw_submissions", {
+  id: serial("id").primaryKey(),
+  sourceId: integer("source_id").notNull().references(() => sources.id),
+  submittedBy: text("submitted_by").references(() => users.id, { onDelete: "set null" }),
+  spotId: integer("spot_id").references(() => spots.id),
+  title: text("title"),
+  body: text("body").notNull(),
+  url: text("url"),
+  reportDate: timestamp("report_date", { withTimezone: true }).notNull(),
+  status: text("status").default("received").notNull(), // received | processed | failed
+  reportId: integer("report_id").references(() => reports.id, { onDelete: "set null" }),
+  error: text("error"),
+  createdAt: createdAt(),
+});
+
+export const notifications = pgTable(
+  "notifications",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    alertId: integer("alert_id").references(() => alerts.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    body: text("body").notNull(),
+    url: text("url"),
+    readAt: timestamp("read_at", { withTimezone: true }),
+    emailedAt: timestamp("emailed_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [index("notifications_user_idx").on(t.userId, t.createdAt)],
+);

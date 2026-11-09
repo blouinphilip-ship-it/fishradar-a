@@ -13,6 +13,6 @@ export default defineConfig({
     command: `pnpm start -p ${PORT}`,
     url: `http://localhost:${PORT}/api/health`,
     reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
+    timeout: 120_000,
   },
 });

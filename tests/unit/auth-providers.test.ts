@@ -25,4 +25,8 @@ describe("enabledProviderIds", () => {
     expect(enabledProviderIds({ ...none, ENABLE_DEV_LOGIN: true }, "development")).toEqual(["dev"]);
     expect(enabledProviderIds({ ...none, ENABLE_DEV_LOGIN: true }, "production")).toEqual([]);
   });
+  it("allows dev login in production only for an explicit demo server", () => {
+    expect(enabledProviderIds({ ...none, ENABLE_DEV_LOGIN: true, DEMO_MODE: true }, "production")).toEqual(["dev"]);
+    expect(enabledProviderIds({ ...none, ENABLE_DEV_LOGIN: false, DEMO_MODE: true }, "production")).toEqual([]);
+  });
 });

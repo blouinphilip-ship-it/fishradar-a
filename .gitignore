@@ -44,3 +44,5 @@ next-env.d.ts
 !.env.example
 /test-results
 /playwright-report
+/public/maplibre
+/public/uploads

@@ -2,63 +2,70 @@
 
 **Know where the fish are — before you leave the dock.**
 
-A fishing intelligence platform that brings together an interactive globe, live tides, wind, waves and water temperatures, fishing reports from permitted sources, species run tracking and lure recommendations, with an AI assistant on top. The full spec is in [`docs/SPEC.md`](docs/SPEC.md). Build status is in [`PROGRESS.md`](PROGRESS.md).
+A fishing intelligence platform: an interactive 3D globe of saltwater and freshwater spots, live tides / wind / waves / water temperature / river flow, fishing reports from permitted sources, a Run Tracker for migrations (striper run, albies, tuna, tarpon, bull reds, salmon, steelhead…), lure and bait rankings, species pages, community catches, alerts, and an AI fishing assistant.
+
+The full product spec is in [`docs/SPEC.md`](docs/SPEC.md); what's built, what's stubbed and known gaps are in [`PROGRESS.md`](PROGRESS.md).
 
 ## Quick start (Docker)
 
 ```bash
-cp .env.example .env.local      # then set AUTH_SECRET (npx auth secret)
+cp .env.example .env.local      # set AUTH_SECRET (npx auth secret)
 docker compose up --build
 ```
 
-Open http://localhost:3000. If `ENABLE_DEV_LOGIN=true`, use **Sign in → Dev login** to sign in as a local test angler with admin rights.
+Open http://localhost:3000 — with `ENABLE_DEV_LOGIN=true`, **Sign in → Dev login** signs you in as a local admin "Test Angler".
 
-## Quick start (without Docker)
+## Quick start (local)
 
-You need Node 22, pnpm, PostgreSQL 16 with PostGIS 3 and pgvector, and Redis.
+Needs Node 22, pnpm, PostgreSQL 16 + PostGIS 3 + pgvector, Redis.
 
 ```bash
-pnpm install
-cp .env.example .env.local      # point DATABASE_URL at your Postgres
-cp .env.local .env              # drizzle-kit reads .env
+pnpm install                    # also copies the MapLibre worker into public/
+cp .env.example .env.local && cp .env.local .env
 pnpm db:migrate
-pnpm dev
+pnpm db:seed                    # spots, species, runs, lures, regs links + DEMO reports
+pnpm dev                        # web app on :3000
+pnpm worker                     # (optional) scheduled ingestion + alerts
 ```
+
+Behind a corporate/agent HTTPS proxy, Node's `fetch` needs `NODE_USE_ENV_PROXY=1` (Node ≥ 22.21) to reach NOAA/NWS/USGS/Open-Meteo.
+
+## What's real vs. demo
+
+- **Live, real data:** NOAA CO-OPS tides + water temperature, NOAA NDBC buoys, NWS alerts + hourly forecast, Open-Meteo weather + marine, USGS river data, moon/solunar. Nearest stations for each spot are resolved automatically by the seed script.
+- **Demo data:** until you connect report sources, ~1,000 generated reports and ~40 catches make the Run Tracker, lure rankings and feeds come alive. **Every demo row is labeled "Demo data" in the UI.** Re-running `pnpm db:seed` refreshes them; delete them with `delete from reports where is_demo`.
+- **Real reports** come from the Partner Portal (`/partner`), RSS feeds and Reddit (via the worker), each passed through the extraction pipeline.
 
 ## Scripts
 
 | Command | What it does |
 |---|---|
-| `pnpm dev` | Dev server on :3000 |
-| `pnpm build` / `pnpm start` | Production build / serve |
-| `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript strict check |
-| `pnpm test` | Vitest unit and integration tests (integration tests skip if no DB) |
-| `pnpm test:e2e` | Playwright end-to-end tests (desktop and phone) against a production build |
-| `pnpm db:generate` | Create a migration after editing `src/db/schema.ts` |
-| `pnpm db:migrate` | Apply migrations |
-| `pnpm db:studio` | Browse the database |
+| `pnpm dev` / `pnpm build` / `pnpm start` | Dev server / production build / serve |
+| `pnpm worker` | BullMQ worker: scheduled source ingestion + alert checks every 15 min |
+| `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript strict |
+| `pnpm test` | Vitest: scoring, parsers (real API fixtures), extraction, geo, DB integration |
+| `pnpm test:e2e` | Playwright (desktop + phone) against a production build |
+| `pnpm db:generate` / `db:migrate` / `db:seed` / `db:studio` | Drizzle migrations, seed, browser |
+
+## API keys
+
+Listed in `.env.example` with where to get them and whether they're free. **None are required to run the app.** Without keys:
+- AI features run in **offline mode** (rule-based answers/extraction from the same tools). Add `ANTHROPIC_API_KEY` for Claude.
+- Videos show a YouTube search link. Add `YOUTUBE_API_KEY` to embed recent videos.
+- Sign-in uses the dev login. Add Google / Apple / Resend keys for real accounts and alert emails.
 
 ## Layout
 
 ```
 src/
-  app/                 Next.js App Router pages and API routes
-    api/auth/          Auth.js handlers
-    api/health/        DB and extension health check
-  auth.ts              Auth.js config (Google, Apple, Resend magic link, dev login)
-  components/
-    layout/            Top bar, mode toggle, theme toggle, search, account menu
-    home/              Globe-screen pieces (filter drawer, …)
-    ui/                shadcn/ui-style primitives
-  db/
-    schema.ts          Full data model (Section 17 of the spec)
-    index.ts           Drizzle client
-  lib/                 env validation, nav helpers, utils
-drizzle/               SQL migrations (checked in)
-docker/db/             Postgres + PostGIS + pgvector image
-tests/unit|integration|e2e
+  app/                 Pages (globe, spot, species-at-spot, runs, lures, species, catches, assistant, me, partner, admin…) + API routes
+  app/actions.ts       Server actions (save spot, alerts, catches, comments, partner reports, admin)
+  components/          UI: globe (MapLibre), charts (Recharts), fish/lure illustrations, badges…
+  db/schema.ts         Data model (PostGIS + pgvector)    db/seed/   catalog + demo data
+  lib/conditions/      NOAA / NDBC / NWS / Open-Meteo / USGS / astronomy adapters
+  lib/scoring.ts       Fishing Score engine ("Why this score?")
+  lib/ingest/          Report pipeline: classify → extract (Claude or rules) → normalize → store
+  lib/ai/              Claude client, assistant (tool use), spot briefings
+  worker/              BullMQ worker + RSS / Reddit / YouTube adapters
+drizzle/               SQL migrations     tests/   unit, integration, e2e, fixtures
 ```
-
-## API keys
-
-All of them are listed in `.env.example`, with where to get each one and whether it's free. Phase 1 needs only `AUTH_SECRET`.

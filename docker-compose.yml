@@ -1,7 +1,6 @@
 # Local development: database, cache, migrations and the web app.
 #   docker compose up --build
 # Then open http://localhost:3000
-# (The ingestion worker service is added in Phase 4.)
 services:
   db:
     build: ./docker/db
@@ -26,7 +25,7 @@ services:
 
   migrate:
     build: .
-    command: ["pnpm", "db:migrate"]
+    command: ["sh", "-c", "pnpm db:migrate && pnpm db:seed"]
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/fishradar
     depends_on:
@@ -42,6 +41,19 @@ services:
     volumes:
       - ./src:/app/src
       - ./public:/app/public
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+
+  worker:
+    build: .
+    command: ["pnpm", "worker"]
+    env_file: [.env.local]
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/fishradar
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ./src:/app/src
     depends_on:
       migrate: { condition: service_completed_successfully }
       redis: { condition: service_healthy }

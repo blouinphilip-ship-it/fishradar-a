@@ -1,0 +1,514 @@
+{
+ "hampton-harbor-nh": {
+  "tide": "8429489",
+  "wtemp": "8419870",
+  "buoy": "iosn3"
+ },
+ "rye-ledges-nh": {
+  "tide": "8424601",
+  "wtemp": "8419870",
+  "buoy": "cmln3"
+ },
+ "portsmouth-harbor-nh": {
+  "tide": "8423898",
+  "wtemp": "8419870",
+  "buoy": "cmln3"
+ },
+ "isles-of-shoals": {
+  "tide": "8427031",
+  "wtemp": "8419870",
+  "buoy": "iosn3"
+ },
+ "kennebec-river-me": {
+  "tide": "8417177",
+  "wtemp": "8418150",
+  "buoy": "44032",
+  "usgs": null
+ },
+ "casco-bay-me": {
+  "tide": "8417911",
+  "wtemp": "8418150",
+  "buoy": "casm1"
+ },
+ "plum-island-ma": {
+  "tide": "8440452",
+  "wtemp": "8419870",
+  "buoy": "iosn3"
+ },
+ "cape-ann-ma": {
+  "tide": "8441551",
+  "wtemp": null,
+  "buoy": "44029"
+ },
+ "boston-harbor-ma": {
+  "tide": "8444012",
+  "wtemp": null,
+  "buoy": "csim3"
+ },
+ "stellwagen-bank-ma": {
+  "tide": "8446121",
+  "wtemp": null,
+  "buoy": "44013"
+ },
+ "cape-cod-canal-ma": {
+  "tide": "8447191",
+  "wtemp": "8447930",
+  "buoy": "44090"
+ },
+ "cape-cod-bay-ma": {
+  "tide": "8447335",
+  "wtemp": "8447435",
+  "buoy": "44090"
+ },
+ "chatham-ma": {
+  "tide": "8447505",
+  "wtemp": "8447435",
+  "buoy": "44020"
+ },
+ "race-point-ma": {
+  "tide": "8446121",
+  "wtemp": null,
+  "buoy": "44090"
+ },
+ "marthas-vineyard-ma": {
+  "tide": "8448683",
+  "wtemp": "8447930",
+  "buoy": "44020"
+ },
+ "nantucket-ma": {
+  "tide": "8448566",
+  "wtemp": "8449130",
+  "buoy": "ntkm3"
+ },
+ "buzzards-bay-ma": {
+  "tide": "8447941",
+  "wtemp": "8447930",
+  "buoy": "bzbm3"
+ },
+ "block-island-ri": {
+  "tide": "8459338",
+  "wtemp": "8510560",
+  "buoy": "mtkn6"
+ },
+ "watch-hill-ri": {
+  "tide": "8458694",
+  "wtemp": "8461490",
+  "buoy": "nlhc3"
+ },
+ "point-judith-ri": {
+  "tide": "8455083",
+  "wtemp": "8452660",
+  "buoy": "nwpr1"
+ },
+ "the-race-ct": {
+  "tide": "8510719",
+  "wtemp": "8461490",
+  "buoy": "nlhc3"
+ },
+ "montauk-point-ny": {
+  "tide": "8510448",
+  "wtemp": "8510560",
+  "buoy": "mtkn6"
+ },
+ "montauk-offshore-ny": {
+  "tide": "8459338",
+  "wtemp": null,
+  "buoy": "44097"
+ },
+ "orient-point-ny": {
+  "tide": "8511236",
+  "wtemp": "8461490",
+  "buoy": "nlhc3"
+ },
+ "fire-island-inlet-ny": {
+  "tide": "8515228",
+  "wtemp": null,
+  "buoy": "44069"
+ },
+ "jamaica-bay-ny": {
+  "tide": "8517137",
+  "wtemp": "8518750",
+  "buoy": "batn6"
+ },
+ "sandy-hook-nj": {
+  "tide": "8531680",
+  "wtemp": "8531680",
+  "buoy": "sdhn4"
+ },
+ "manasquan-nj": {
+  "tide": "8532591",
+  "wtemp": null,
+  "buoy": "44065"
+ },
+ "barnegat-inlet-nj": {
+  "tide": "8533615",
+  "wtemp": null,
+  "buoy": "44091"
+ },
+ "cape-may-nj": {
+  "tide": "8536021",
+  "wtemp": "8536110",
+  "buoy": "brnd1"
+ },
+ "hudson-canyon": {
+  "tide": null,
+  "wtemp": null,
+  "buoy": "44025"
+ },
+ "ocean-city-md": {
+  "tide": "8570280",
+  "wtemp": "8570283",
+  "buoy": "ocim2"
+ },
+ "chesapeake-bay-bridge-tunnel": {
+  "tide": "8638901",
+  "wtemp": "8632200",
+  "buoy": "chbv2"
+ },
+ "chesapeake-bay-md": {
+  "tide": "8572271",
+  "wtemp": "8575512",
+  "buoy": "tplm2",
+  "usgs": null
+ },
+ "oregon-inlet-nc": {
+  "tide": "8652678",
+  "wtemp": "8652587",
+  "buoy": "orin7"
+ },
+ "cape-hatteras-nc": {
+  "tide": "TEC2789",
+  "wtemp": "8654467",
+  "buoy": "hcgn7"
+ },
+ "crystal-coast-nc": {
+  "tide": "8656841",
+  "wtemp": "8656483",
+  "buoy": "clkn7"
+ },
+ "charleston-sc": {
+  "tide": "8665728",
+  "wtemp": "8665530",
+  "buoy": "chts1"
+ },
+ "hilton-head-sc": {
+  "tide": "8669338",
+  "wtemp": "8670870",
+  "buoy": "fpkg1"
+ },
+ "jacksonville-fl": {
+  "tide": "8720214",
+  "wtemp": "8720218",
+  "buoy": "mypf1"
+ },
+ "mosquito-lagoon-fl": {
+  "tide": "8721223",
+  "wtemp": null,
+  "buoy": "41069"
+ },
+ "sebastian-inlet-fl": {
+  "tide": "8722004",
+  "wtemp": null,
+  "buoy": "sipf1"
+ },
+ "palm-beach-fl": {
+  "tide": "8722588",
+  "wtemp": "8722670",
+  "buoy": "lkwf1"
+ },
+ "biscayne-bay-fl": {
+  "tide": "8723372",
+  "wtemp": "8723214",
+  "buoy": "vakf1"
+ },
+ "key-largo-fl": {
+  "tide": "8723689",
+  "wtemp": null,
+  "buoy": "bnkf1"
+ },
+ "islamorada-fl": {
+  "tide": "8723808",
+  "wtemp": null,
+  "buoy": "pkyf1"
+ },
+ "marathon-fl": {
+  "tide": "8723971",
+  "wtemp": "8723970",
+  "buoy": "vcaf1"
+ },
+ "big-pine-key-fl": {
+  "tide": "8724211",
+  "wtemp": "8723970",
+  "buoy": "smkf1"
+ },
+ "key-west-fl": {
+  "tide": "8724580",
+  "wtemp": "8724580",
+  "buoy": "kywf1"
+ },
+ "dry-tortugas-fl": {
+  "tide": "8724697",
+  "wtemp": null,
+  "buoy": null
+ },
+ "florida-bay-flamingo": {
+  "tide": "8723644",
+  "wtemp": null,
+  "buoy": "mukf1"
+ },
+ "naples-fl": {
+  "tide": "8724996",
+  "wtemp": null,
+  "buoy": "rkxf1"
+ },
+ "boca-grande-pass-fl": {
+  "tide": "8725577",
+  "wtemp": "8725520",
+  "buoy": "fmrf1"
+ },
+ "tampa-bay-fl": {
+  "tide": "8726364",
+  "wtemp": "8726384",
+  "buoy": "mtbf1"
+ },
+ "homosassa-fl": {
+  "tide": "8727277",
+  "wtemp": null,
+  "buoy": "ckyf1"
+ },
+ "destin-fl": {
+  "tide": "8729511",
+  "wtemp": null,
+  "buoy": "pcbf1"
+ },
+ "pensacola-fl": {
+  "tide": "8729887",
+  "wtemp": "8729840",
+  "buoy": "pclf1"
+ },
+ "orange-beach-al": {
+  "tide": "8730667",
+  "wtemp": "8729840",
+  "buoy": "ppta1"
+ },
+ "venice-la": {
+  "tide": "8760736",
+  "wtemp": "8760721",
+  "buoy": "pill1"
+ },
+ "grand-isle-la": {
+  "tide": "TEC4455",
+  "wtemp": "8761724",
+  "buoy": "gisl1"
+ },
+ "galveston-tx": {
+  "tide": "8771416",
+  "wtemp": "8771341",
+  "buoy": "gnjt2"
+ },
+ "port-aransas-tx": {
+  "tide": "8775270",
+  "wtemp": "8775241",
+  "buoy": "mist2"
+ },
+ "south-padre-tx": {
+  "tide": "8779748",
+  "wtemp": "8779748",
+  "buoy": "pcgt2"
+ },
+ "point-loma-ca": {
+  "tide": "TWC0405",
+  "wtemp": "9410170",
+  "buoy": "sdbc1"
+ },
+ "san-diego-offshore": {
+  "tide": "TWC0405",
+  "wtemp": "9410170",
+  "buoy": "46232"
+ },
+ "dana-point-ca": {
+  "tide": "TWC0419",
+  "wtemp": null,
+  "buoy": "46285"
+ },
+ "santa-monica-bay-ca": {
+  "tide": "9410738",
+  "wtemp": "9410840",
+  "buoy": "46221"
+ },
+ "channel-islands-ca": {
+  "tide": "9410971",
+  "wtemp": null,
+  "buoy": "46251"
+ },
+ "morro-bay-ca": {
+  "tide": "9412110",
+  "wtemp": "9412110",
+  "buoy": "mbxc1"
+ },
+ "monterey-bay-ca": {
+  "tide": "9413616",
+  "wtemp": "9413450",
+  "buoy": "46236"
+ },
+ "san-francisco-bay-ca": {
+  "tide": "9414792",
+  "wtemp": "9414290",
+  "buoy": "pxsc1",
+  "usgs": "374938122251801"
+ },
+ "bodega-bay-ca": {
+  "tide": "9415625",
+  "wtemp": "9415020",
+  "buoy": "bdxc1"
+ },
+ "newport-or": {
+  "tide": "9435385",
+  "wtemp": "9435380",
+  "buoy": "nwpo3"
+ },
+ "buoy-10-or": {
+  "tide": "9440573",
+  "wtemp": "9439040",
+  "buoy": "46243",
+  "usgs": "12010000"
+ },
+ "westport-wa": {
+  "tide": "9441102",
+  "wtemp": "9441102",
+  "buoy": "wptw1"
+ },
+ "puget-sound-wa": {
+  "tide": "9447110",
+  "wtemp": "9447130",
+  "buoy": "ebsw1"
+ },
+ "kenai-river-ak": {
+  "buoy": null,
+  "usgs": "15266300"
+ },
+ "homer-ak": {
+  "tide": "9455558",
+  "wtemp": "9455500",
+  "buoy": "hmsa2"
+ },
+ "sitka-ak": {
+  "tide": "9451600",
+  "wtemp": "9451600",
+  "buoy": "shxa2"
+ },
+ "kona-hi": {
+  "tide": "1617846",
+  "wtemp": null,
+  "buoy": "kwhh1"
+ },
+ "oahu-waianae-hi": {
+  "tide": "1612482",
+  "wtemp": "1612340",
+  "buoy": "51212"
+ },
+ "lake-winnipesaukee-nh": {
+  "buoy": null,
+  "usgs": "01064801"
+ },
+ "squam-lake-nh": {
+  "buoy": null,
+  "usgs": "01076500"
+ },
+ "merrimack-river-nh": {
+  "buoy": null,
+  "usgs": "01088400"
+ },
+ "moosehead-lake-me": {
+  "buoy": null,
+  "usgs": null
+ },
+ "sebago-lake-me": {
+  "buoy": null,
+  "usgs": "01063310"
+ },
+ "quabbin-reservoir-ma": {
+  "buoy": null,
+  "usgs": "01174500"
+ },
+ "lake-champlain-vt": {
+  "buoy": null,
+  "usgs": "04294500"
+ },
+ "delaware-west-branch-ny": {
+  "buoy": null,
+  "usgs": "01421500"
+ },
+ "salmon-river-ny": {
+  "buoy": null,
+  "usgs": "04250200"
+ },
+ "thousand-islands-ny": {
+  "buoy": null,
+  "usgs": null
+ },
+ "lake-erie-buffalo-ny": {
+  "buoy": "dbln6",
+  "usgs": "04213394"
+ },
+ "erie-pa-steelhead": {
+  "buoy": null,
+  "usgs": "04213152"
+ },
+ "lake-erie-western-basin-oh": {
+  "buoy": "sbio1",
+  "usgs": null
+ },
+ "maumee-river-oh": {
+  "buoy": null,
+  "usgs": "04193998"
+ },
+ "lake-st-clair-mi": {
+  "buoy": "45147",
+  "usgs": "04165500"
+ },
+ "pere-marquette-mi": {
+  "buoy": null,
+  "usgs": "04126195"
+ },
+ "green-bay-wi": {
+  "buoy": null,
+  "usgs": "444049087424302"
+ },
+ "mille-lacs-mn": {
+  "buoy": null,
+  "usgs": "05284000"
+ },
+ "lake-of-the-woods-mn": {
+  "buoy": null,
+  "usgs": "05137500"
+ },
+ "lake-okeechobee-fl": {
+  "buoy": null,
+  "usgs": "02276877"
+ },
+ "lake-fork-tx": {
+  "buoy": null,
+  "usgs": "08018800"
+ },
+ "lake-guntersville-al": {
+  "buoy": null,
+  "usgs": "03572900"
+ },
+ "kentucky-lake-ky": {
+  "buoy": null,
+  "usgs": "03610200"
+ },
+ "south-platte-deckers-co": {
+  "buoy": null,
+  "usgs": "06701900"
+ },
+ "missouri-river-mt": {
+  "buoy": null,
+  "usgs": "06066500"
+ },
+ "clear-lake-ca": {
+  "buoy": null,
+  "usgs": "11449820"
+ }
+}

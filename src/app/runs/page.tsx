@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/coming-soon";
+import { InfoLegend } from "@/components/info-legend";
+import { RunCards } from "@/components/hub/run-cards";
+import { listRuns } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Run Tracker" };
+export const dynamic = "force-dynamic";
 
-export default function Page() {
+export default async function RunsPage() {
+  const [salt, fresh] = await Promise.all([listRuns("salt"), listRuns("fresh")]);
   return (
-    <ComingSoon title="Run Tracker" phase={5}>
-      <p>Follow a species run along the coast: verified reports on a map and timeline, this year vs. a typical year, and an AI prediction of where it goes next.</p>
-    </ComingSoon>
+    <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-6">
+      <header>
+        <h1 className="text-3xl font-bold">Run Tracker</h1>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">Follow migrations as they happen. Each run shows verified reports by date and place, how this year compares to the typical timing, and a clearly labeled AI prediction of where the fish go next.</p>
+        <InfoLegend className="mt-3" />
+      </header>
+      <section><h2 className="mb-3 text-xl font-semibold">Saltwater runs</h2><RunCards runs={salt} /></section>
+      <section><h2 className="mb-3 text-xl font-semibold">Freshwater runs &amp; seasonal events</h2><RunCards runs={fresh} /></section>
+    </div>
   );
 }

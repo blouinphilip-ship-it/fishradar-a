@@ -12,13 +12,13 @@ export function enabledProviderIds(
     | "AUTH_APPLE_ID"
     | "AUTH_APPLE_SECRET"
     | "ENABLE_DEV_LOGIN"
-  >,
+  > & { DEMO_MODE?: boolean },
   nodeEnv: string | undefined = process.env.NODE_ENV,
 ): ProviderId[] {
   const ids: ProviderId[] = [];
   if (env.AUTH_RESEND_KEY) ids.push("resend");
   if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) ids.push("google");
   if (env.AUTH_APPLE_ID && env.AUTH_APPLE_SECRET) ids.push("apple");
-  if (env.ENABLE_DEV_LOGIN && nodeEnv !== "production") ids.push("dev");
+  if (env.ENABLE_DEV_LOGIN && (nodeEnv !== "production" || env.DEMO_MODE)) ids.push("dev");
   return ids;
 }

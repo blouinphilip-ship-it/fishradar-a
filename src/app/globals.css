@@ -104,3 +104,8 @@ body {
 * {
   border-color: var(--border);
 }
+
+/* globe */
+.fr-pin { width: 18px; height: 18px; border-radius: 9999px; background: #f43f5e; border: 3px solid #fff; box-shadow: 0 0 0 6px rgb(244 63 94 / 0.25); }
+.maplibregl-popup-content { padding: 8px 10px; border-radius: 8px; }
+.maplibregl-ctrl-attrib { font-size: 10px; }

@@ -1,0 +1,3 @@
+{"type":"FeatureCollection","features":[
+ {"properties":{"event":"Small Craft Advisory","headline":"Small Craft Advisory issued November 9 at 3:12PM EST until November 10 at 6:00AM EST by NWS Boston/Norton MA","severity":"Minor","description":"* WHAT...Northwest winds 15 to 25 kt with gusts up to 30 kt and seas 4 to 6 ft.","expires":"2026-11-10T11:00:00Z"}},
+ {"properties":{"event":"Frost Advisory","headline":"Frost Advisory until 8AM","severity":"Minor","description":"Temperatures as low as 30.","expires":"2026-11-10T13:00:00Z"}}]}

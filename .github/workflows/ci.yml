@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/fishradar
+      AUTH_SECRET: ci-only-not-a-secret
+      ENABLE_DEV_LOGIN: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Start Postgres (PostGIS + pgvector) and Redis
+        run: |
+          docker build -t fishradar-db ./docker/db
+          docker run -d --name db -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=fishradar fishradar-db
+          docker run -d --name redis -p 6379:6379 redis:7-alpine
+          for i in $(seq 1 30); do docker exec db pg_isready -U postgres -d fishradar && break; sleep 2; done
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm db:migrate
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+        env:
+          CI: "true"

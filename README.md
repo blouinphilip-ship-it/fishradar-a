@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FishRadar AI
 
-## Getting Started
+**Know where the fish are — before you leave the dock.**
 
-First, run the development server:
+A fishing intelligence platform that brings together an interactive globe, live tides, wind, waves and water temperatures, fishing reports from permitted sources, species run tracking and lure recommendations, with an AI assistant on top. The full spec is in [`docs/SPEC.md`](docs/SPEC.md). Build status is in [`PROGRESS.md`](PROGRESS.md).
+
+## Quick start (Docker)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local      # then set AUTH_SECRET (npx auth secret)
+docker compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. If `ENABLE_DEV_LOGIN=true`, use **Sign in → Dev login** to sign in as a local test angler with admin rights.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quick start (without Docker)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You need Node 22, pnpm, PostgreSQL 16 with PostGIS 3 and pgvector, and Redis.
 
-## Learn More
+```bash
+pnpm install
+cp .env.example .env.local      # point DATABASE_URL at your Postgres
+cp .env.local .env              # drizzle-kit reads .env
+pnpm db:migrate
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Dev server on :3000 |
+| `pnpm build` / `pnpm start` | Production build / serve |
+| `pnpm lint` / `pnpm typecheck` | ESLint / TypeScript strict check |
+| `pnpm test` | Vitest unit and integration tests (integration tests skip if no DB) |
+| `pnpm test:e2e` | Playwright end-to-end tests (desktop and phone) against a production build |
+| `pnpm db:generate` | Create a migration after editing `src/db/schema.ts` |
+| `pnpm db:migrate` | Apply migrations |
+| `pnpm db:studio` | Browse the database |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Layout
 
-## Deploy on Vercel
+```
+src/
+  app/                 Next.js App Router pages and API routes
+    api/auth/          Auth.js handlers
+    api/health/        DB and extension health check
+  auth.ts              Auth.js config (Google, Apple, Resend magic link, dev login)
+  components/
+    layout/            Top bar, mode toggle, theme toggle, search, account menu
+    home/              Globe-screen pieces (filter drawer, …)
+    ui/                shadcn/ui-style primitives
+  db/
+    schema.ts          Full data model (Section 17 of the spec)
+    index.ts           Drizzle client
+  lib/                 env validation, nav helpers, utils
+drizzle/               SQL migrations (checked in)
+docker/db/             Postgres + PostGIS + pgvector image
+tests/unit|integration|e2e
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API keys
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All of them are listed in `.env.example`, with where to get each one and whether it's free. Phase 1 needs only `AUTH_SECRET`.

@@ -353,32 +353,35 @@ export async function getRunTracker(run: RunRow, now = new Date(), days = 30): P
     return { state: st, reports: mine.length, last, typicalPeakDoy: w.peakDoy, status, inWindowNow: inWin(today, w), offsetDays };
   });
 
-  // leading edge = furthest state along the route with reports in the last 7 days
+  // Leading edge = furthest state along the route with at least 2 reports in the last 7 days,
+  // counting only states in (or within 10 days of) their season window so a stray report doesn't count.
   let leadingEdge: RunTracker["leadingEdge"] = null;
+  let leadIdx = -1;
   for (let i = run.seasonWindows.length - 1; i >= 0; i--) {
-    const st = run.seasonWindows[i].regionSlug.toUpperCase();
-    const p = points.find((x) => x.state === st && x.ageDays <= 7);
-    if (p) { leadingEdge = { state: st, date: p.publishedAt }; break; }
+    const w = run.seasonWindows[i];
+    const st = w.regionSlug.toUpperCase();
+    const near = inWin(today, w) || inWin(today + 10, w);
+    const recent = points.filter((x) => x.state === st && x.ageDays <= 7);
+    if (near && recent.length >= 2) { leadingEdge = { state: st, date: recent[0].publishedAt }; leadIdx = i; break; }
   }
 
-  // AI-style prediction (rule-based, labeled as a prediction): states whose window opens or peaks in the next 14 days.
-  const upcoming = run.seasonWindows.filter((w) => {
+  // Prediction (rule-based, labeled as a prediction): states further along the route whose
+  // window opens or peaks in the next 14 days.
+  const ahead = run.seasonWindows.filter((_, i) => i > leadIdx);
+  const upcoming = ahead.filter((w) => {
     const t = unwrap(today, w);
-    return (w.startDoy > t && w.startDoy <= t + 14) || (inWin(today, w) && w.peakDoy >= t && w.peakDoy <= t + 14);
+    return (w.startDoy > t && w.startDoy <= t + 14) || (inWin(today, w) && w.peakDoy >= t && w.peakDoy <= t + 14) || inWin(today + 7, w);
   }).map((w) => w.regionSlug.toUpperCase());
-  const leadIdx = leadingEdge ? run.seasonWindows.findIndex((w) => w.regionSlug.toUpperCase() === leadingEdge!.state) : -1;
-  const nextAlong = leadIdx >= 0 && leadIdx < run.seasonWindows.length - 1 ? run.seasonWindows[leadIdx + 1].regionSlug.toUpperCase() : null;
-  const nextStates = [...new Set([...(nextAlong ? [nextAlong] : []), ...upcoming])].slice(0, 3);
+  const nextStates = upcoming.slice(0, 3);
   const reasoning: string[] = [];
-  if (leadingEdge) reasoning.push(`Most recent verified activity at the leading edge: ${leadingEdge.state} (${new Date(leadingEdge.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}).`);
-  for (const s of byState.filter((b) => b.offsetDays != null && b.reports >= 3)) reasoning.push(`${s.state}: activity is ${s.status === "on_time" ? "on schedule" : `${Math.abs(s.offsetDays!)} days ${s.status === "behind" ? "later" : "earlier"} than typical`}.`);
-  if (upcoming.length) reasoning.push(`Historical windows open or peak in the next two weeks for: ${upcoming.join(", ")}.`);
+  if (leadingEdge) reasoning.push(`Leading edge of recent activity: ${leadingEdge.state} (latest ${new Date(leadingEdge.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}).`);
+  for (const s of byState.filter((b) => b.offsetDays != null && b.reports >= 3 && b.status !== "done")) reasoning.push(`${s.state}: activity is ${s.status === "on_time" ? "on schedule" : `${Math.abs(s.offsetDays!)} days ${s.status === "behind" ? "later" : "earlier"} than typical`}.`);
+  if (upcoming.length) reasoning.push(`Historical windows further along the route open or peak in the next two weeks: ${upcoming.join(", ")}.`);
   const recentCount = points.filter((p) => p.ageDays <= 7).length;
   const confidence = recentCount >= 15 && nextStates.length ? "high" : recentCount >= 5 ? "medium" : "low";
   const text = nextStates.length
-    ? `Expect the ${run.speciesName.toLowerCase()} action to build in ${nextStates.join(" → ")} over the next 7–14 days${leadingEdge ? `, continuing ${run.direction ?? "along the route"} from ${leadingEdge.state}` : ""}.`
-    : leadingEdge ? `The run is concentrated around ${leadingEdge.state}; no new areas are expected to open in the next two weeks.` : `No strong signal — the run is outside its typical window or reports are too sparse to predict movement.`;
-
+    ? `Expect the ${run.speciesName.toLowerCase()} action to push ${run.direction ?? "along the route"}${leadingEdge ? ` from ${leadingEdge.state}` : ""} into ${nextStates.join(" → ")} over the next 7–14 days.`
+    : leadingEdge ? `The run is concentrated around ${leadingEdge.state}; no new areas along the route are expected to open in the next two weeks.` : `No strong signal — the run is outside its typical window or reports are too sparse to predict movement.`;
   return { run, points, byState, leadingEdge, prediction: { text, confidence, nextStates, reasoning } };
 }
 

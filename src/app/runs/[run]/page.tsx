@@ -72,7 +72,7 @@ export default async function RunPage({ params }: Props) {
             <ul className="mt-2 list-disc space-y-0.5 pl-4 text-xs text-muted-foreground">{t.prediction.reasoning.map((r) => <li key={r}>{r}</li>)}</ul>
             <p className="mt-2 text-[11px] text-muted-foreground">Predictions combine recent report progression with historical seasonal windows. Not a guarantee.</p>
           </div>
-          {t.leadingEdge && <p className="rounded-lg border border-border bg-surface p-3 text-sm"><Badge variant="verified">Verified</Badge> Leading edge: <b>{t.leadingEdge.state}</b>, last report {timeAgo(t.leadingEdge.date)}.</p>}
+          {t.leadingEdge && <p className="rounded-lg border border-border bg-surface p-3 text-sm">{anyDemo ? <Badge variant="demo">Demo data</Badge> : <Badge variant="verified">Verified</Badge>} Leading edge: <b>{t.leadingEdge.state}</b>, last report {timeAgo(t.leadingEdge.date)}.</p>}
         </div>
       </section>
 
